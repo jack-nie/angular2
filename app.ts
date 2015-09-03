@@ -1,8 +1,9 @@
 /// <reference path="typings/angular2/angular2.d.ts" />
-import { Component, View, bootstrap, NgFor, NgIf } from 'angular2/angular2';
+import { Component, View, bootstrap, NgFor, NgIf, Inject, forwardRef } from 'angular2/angular2';
 
 @Component({
   selector: "my-app",
+  bindings: [FriendsService]
 })
 
 @View({
@@ -25,9 +26,9 @@ class MyAppComponent {
   name: string;
   names: Array<string>;
 
-  constructor() {
+  constructor(@Inject(forwardRef( () => FriendsService )) friendsService: FriendsService) {
     this.name = 'Alice';
-    this.names = ["Aarav", "Martin", "Shannon", "Ariana"];
+    this.names = friendsService.names;
   }
   addName(name: string) {
     this.names.push(name);
@@ -40,4 +41,11 @@ class MyAppComponent {
   }
 }
 
-bootstrap(MyAppComponent);
+class FriendsService {
+  names: Array<string>;
+  constructor() {
+    this.names = ["Alice", "Aarav", "Martin", "Shannon", "Ariana", "Kai"]
+  }
+}
+
+bootstrap(MyAppComponent,[FriendsService]);
